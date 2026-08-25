@@ -1,3 +1,7 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "json.schemaDownload.trustedDomains": {
+        "https://opencode.ai/": true,
+        "https://models.dev/": true
+    }
 }

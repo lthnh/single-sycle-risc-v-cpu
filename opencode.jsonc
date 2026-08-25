@@ -8,5 +8,8 @@
             "command": ["slang-server"],
             "extensions": [".v", ".vh", ".sv", ".svh"]
         }
-    }
+    },
+    "instructions": [
+        "verilog-style-guide.md"
+    ]
 }
