@@ -1,5 +1,5 @@
 PROJECT_NAME := single-cycle-risc-v-cpu
-PROJECT_DIR = $(shell find -L $$HOME -name $(PROJECT_NAME) -type d 2>/dev/null)
+PROJECT_DIR = $(shell find -L $$HOME/Personal -name $(PROJECT_NAME) -type d 2>/dev/null)
 
 vpath %.v $(shell find $(PROJECT_DIR)/src -type d)
 
