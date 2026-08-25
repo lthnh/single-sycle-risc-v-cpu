@@ -1,5 +1,10 @@
 # Single-Cycle RISC-V CPU - AGENTS.md
 
+## Programming Guidelines
+- This project strictly uses Verilog IEEE 1364-2005 standard.
+- For all source files except testbenchs (files whose names end with _tb) use synthesizable code. Unsynthesizable code in those files is NOT allowed.
+- When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
+
 ## Build & Simulation
 - `make -C tests/tb program_counter_tb` - compile + run a testbench with iverilog + vpv
 - `make -C tests/tb all` - run all 3 base testbenches (pc, im, dm)
