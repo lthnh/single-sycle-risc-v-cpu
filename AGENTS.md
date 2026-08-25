@@ -6,7 +6,7 @@
 - When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
 
 ## Documentation Guidelines
-- If the code mentioned has a backtick \` in it, wrap that code in double backtick like this ``some code with `SOME_CONSTANT``.
+- If the code mentioned has a backtick \` in it, wrap that code in double backticks like this `` some code with `SOME_CONSTANT ``. Notice the space added between the code content and double backticks.
 
 ## Build & Simulation
 - `make -C tests/tb program_counter_tb` - compile + run a testbench with iverilog + vpv
