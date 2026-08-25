@@ -1,9 +1,4 @@
-`define LW 7'b0000011
-`define SW 7'b0100011
-`define R_TYPE 7'b0110011
-`define BEQ 7'b1100011
-`define ADDI 7'b0010011
-`define JAL 7'b1101111
+`include "riscv_opcodes.vh"
 
 module main_decoder(
   input wire [6:0] op_in,
@@ -24,12 +19,13 @@ module main_decoder(
         alu_src_sel_out = 1'b1;
         mem_write_out = 1'b0;
         res_src_sel_out = 2'b01;
-        br_out = 2'b00;
+        br_out = 1'b0;
         alu_op_out = 2'b00;
         jmp_out = 1'b0;
       end
       `SW: begin
         reg_write_out = 1'b0;
+        res_src_sel_out = 2'b00;
         imm_src_sel_out = 2'b01;
         alu_src_sel_out = 1'b1;
         mem_write_out = 1'b1;
@@ -40,6 +36,7 @@ module main_decoder(
       `R_TYPE: begin
         reg_write_out = 1'b1;
         alu_src_sel_out = 1'b0;
+        imm_src_sel_out = 2'b00;
         mem_write_out = 1'b0;
         res_src_sel_out = 2'b00;
         br_out = 1'b0;
@@ -58,7 +55,7 @@ module main_decoder(
       `ADDI: begin
         reg_write_out = 1'b1;
         imm_src_sel_out = 2'b00;
-        alu_src_sel_out = 1'b01;
+        alu_src_sel_out = 2'b01;
         mem_write_out = 1'b0;
         res_src_sel_out = 2'b00;
         br_out = 1'b0;
@@ -69,11 +66,22 @@ module main_decoder(
         reg_write_out = 1'b1;
         imm_src_sel_out = 2'b11;
         mem_write_out = 1'b0;
+        alu_src_sel_out = 2'b00;
         res_src_sel_out = 2'b10;
         br_out = 1'b0;
         jmp_out = 1'b1;
+        alu_op_out = 2'b00;
       end
-      default:;
+      default: begin
+        reg_write_out = 1'b0;
+        imm_src_sel_out = 2'b00;
+        alu_src_sel_out = 1'b00;
+        mem_write_out = 1'b0;
+        res_src_sel_out = 2'b00;
+        br_out = 1'b0;
+        alu_op_out = 2'b00;
+        jmp_out = 1'b0;
+      end
     endcase
   end
 endmodule

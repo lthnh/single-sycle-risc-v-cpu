@@ -1,4 +1,5 @@
 `include "common.vh"
+`include "riscv_opcodes.vh"
 
 module immediate_sign_extend(
   input wire [`WIDTH-1:0] curr_instr_in,
@@ -15,7 +16,7 @@ module immediate_sign_extend(
       2'b10: imm_ext_out = {{20{curr_instr_in[31]}}, curr_instr_in[7], curr_instr_in[30:25], curr_instr_in[11:8], 1'b0};
       // J-type
       2'b11: imm_ext_out = {{12{curr_instr_in[31]}}, curr_instr_in[19:12], curr_instr_in[20], curr_instr_in[30:21], 1'b0};
-      default:;
+      default: imm_ext_out = {`WIDTH{1'b0}};
     endcase
   end
 endmodule

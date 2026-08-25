@@ -1,7 +1,11 @@
 `include "common.vh"
+`include "riscv_opcode.vh"
 
 module single_cycle_cpu(
-  input wire clk_in
+  input wire clk_in,
+  input wire prog_enable_in,
+  input wire [`WIDTH-1:0] instr_in,
+  output wire [`WIDTH-1:0] instr_out
 );
   wire [`WIDTH-1:0] next_instr_int, addr_instr_int, curr_instr_int;
   wire [`WIDTH-1:0] imm_ext_int, src_a_int, src_b_int, alu_res_int;
@@ -40,14 +44,19 @@ module single_cycle_cpu(
   );
 
   instruction_increment instr_incr (
-    .curr_instr_in           (curr_instr_int),
+    .curr_pc_in           (curr_instr_int),
     .curr_plus_four_instr_out(curr_plus_four_instr_int)
   );
 
   instruction_memory instr_mem (
     .addr_in  (addr_instr_int),
+    .prog_enable_in(prog_enable_in),
+    .instr_in(instr_in),
+    .clk_in(clk_in),
     .instr_out(curr_instr_int)
   );
+
+  assign instr_out = curr_instr_int;
 
   register_file reg_file (
     .addr1_in        (curr_instr_int[19:15]),
@@ -98,7 +107,7 @@ module single_cycle_cpu(
   );
 
   branch_target bt (
-    .curr_instr_in     (curr_instr_int),
+    .curr_pc_in     (curr_instr_int),
     .instr_br_offset_in(imm_ext_int),
     .instr_br_to_out   (instr_branch_to_int)
   );

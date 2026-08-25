@@ -12,7 +12,7 @@ module alu_decoder(
       2'b10: begin
         case (funct3_in)
           3'b000: begin
-            if (~(op_in[5] && funct7_bit5_in))
+            if (!(op_in[5] && funct7_bit5_in))
               opctrl_out = 3'b000;
             else
               opctrl_out = 3'b001;
@@ -20,7 +20,7 @@ module alu_decoder(
           3'b010: opctrl_out = 3'b101;
           3'b110: opctrl_out = 3'b011;
           3'b111: opctrl_out = 3'b010;
-          default:;
+          default: opctrl_out = 3'b000;
         endcase
       end
       default:;

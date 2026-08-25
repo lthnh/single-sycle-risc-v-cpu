@@ -12,7 +12,7 @@ module mux31_32b(
       2'b00: s_out = a_in;
       2'b01: s_out = b_in;
       2'b10: s_out = c_in;
-      default:;
+      default: s_out = {`WIDTH{1'b0}};
     endcase
   end
 endmodule
