@@ -52,6 +52,13 @@ rather than relitigate them:
    encodes real dependencies — most importantly Phase 6 on Phases 2 and 5 (see Risks).
    Stopping after any phase leaves the repository in a better state than before it; skipping
    ahead does not.
+4. **Split the build system by host platform.** On Linux, keep `iverilog` + `make` as the
+   build/synth/test toolchain, with one exception: any **UVM testbench** is SystemVerilog and is
+   compiled/run through the SystemVerilog toolchain (not `-g2005` iverilog), since UVM cannot be
+   expressed in IEEE 1364-2005. On **Windows**, do not port the Makefiles — build, synthesize,
+   and test the project via **Tcl scripts** instead (e.g. driven through Vivado's `-mode tcl`,
+   matching the synthesis flow already used in Verification §5). The two flows are maintained in
+   parallel, not one generated from the other. See Phase 0 item 6 and Phase 7 item 39.
 
 ---
 
@@ -194,8 +201,19 @@ better state than before it.
    because nothing ever compiled the top module.
 5. **`.gitignore`** — add `vivado.jou`, `vivado.log`, `*.vcd`, `.Xil/`,
    `usage_statistics_webtalk.*` (E21).
+6. **New `tools/tcl/` build scripts (Windows)** — `build.tcl`, `synth.tcl`, `test.tcl` (or one
+   entry script dispatching subcommands) that reproduce, via Vivado's `-mode tcl`, what the
+   Makefiles do on Linux: elaborate/lint the design, run each testbench and report pass/fail, and
+   drive synthesis. These scripts are the Windows build system going forward — they are not a
+   stopgap and are not expected to shell out to `iverilog`/`make`. Keep the source file lists
+   (`src/**/*.v`, `-Iinc`) in one place shared conceptually with `tests/mk/common.mk` so the two
+   flows don't drift on *what* gets compiled, only *how*. UVM testbenches (once added) are
+   SystemVerilog and are compiled/run by these Tcl scripts (or an equivalent SV-capable flow) on
+   both platforms — never by `iverilog -g2005`, which cannot parse UVM.
 
-*Verify:* `make lint` and `make -C tests/tb all` both run.
+*Verify (Linux):* `make lint` and `make -C tests/tb all` both run.
+*Verify (Windows):* the Tcl build/synth/test scripts run end-to-end with no `make`/`iverilog`
+dependency.
 
 ### Phase 1 — Datapath wiring
 
@@ -356,6 +374,10 @@ better state than before it.
     directory map, license (E20).
 38. **CI** — a GitHub Actions workflow running `make lint` and the full test suite. Only
     meaningful *after* Phase 4, since before that a fully-failing suite exits 0 (E6).
+39. **Windows Tcl flow parity** — bring `tools/tcl/` up to date with whatever Phases 0–7 changed
+    on the Linux side (new/renamed testbenches, the widened ALU encoding, `mul_tb` inclusion,
+    etc.), and document both flows side by side in `README.md` (Linux: `make`/`iverilog`, plus
+    SystemVerilog/UVM where applicable; Windows: `tools/tcl/*.tcl`).
 
 ### Deliberately out of scope
 
@@ -375,7 +397,8 @@ unimplemented encoding.
 `src/alu_mods/add_mods/cla_mod/modified_full_adder.v` ·
 `src/alu_mods/mul_mods/shiftnadd_mod/{shift_reg,d_flip_flop}.v` · `inc/{alu,assert,common}.vh` ·
 **new** `tests/mk/common.mk` · **new** `tests/tb/single_cycle_cpu_tb.v` (+11 more TBs) ·
-all 6 Makefiles · `opencode.jsonc` · **new** `STYLE.md` · `AGENTS.md` · `README.md` ·
+all 6 Makefiles · **new** `tools/tcl/{build,synth,test}.tcl` (Windows build/synth/test flow) ·
+`opencode.jsonc` · **new** `STYLE.md` · `AGENTS.md` · `README.md` ·
 `.gitignore` · `tools/slang/slang.f`
 
 ## Risks
@@ -411,6 +434,10 @@ all 6 Makefiles · `opencode.jsonc` · **new** `STYLE.md` · `AGENTS.md` · `REA
    synthesizable". Worth scripting as `make synth` and running from Phase 2 onward.
 6. **Fresh-clone check** — `git clone` to a new directory and run `make lint && make -C tests/tb all`
    with no manual `mkdir`. This catches E17, which the current repo fails.
+7. **Windows parity check** — from a fresh clone on Windows, run the `tools/tcl/` build, synth,
+   and test scripts with no `make`/`iverilog` on `PATH`; confirm they report the same pass/fail
+   set as the Linux `make -C tests/tb all` run (SystemVerilog/UVM testbenches excepted, since
+   those don't run under `iverilog -g2005` on Linux either).
 
 ---
 
