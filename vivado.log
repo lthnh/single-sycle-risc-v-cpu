@@ -1,0 +1,26 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite ALVEO license has been detected. Your current license is active and will expire on 23-aug-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Wed Aug 26 10:22:50 2026
+# Process ID         : 16304
+# Current directory  : D:/projects/single-cycle-risc-v-cpu
+# Command line       : vivado.exe -mode tcl
+# Log file           : D:/projects/single-cycle-risc-v-cpu/vivado.log
+# Journal file       : D:/projects/single-cycle-risc-v-cpu\vivado.jou
+# Running On         : NightlyV2
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : Intel(R) Core(TM) Ultra 5 225H
+# CPU Frequency      : 3686 MHz
+# CPU Physical cores : 14
+# CPU Logical cores  : 14
+# Host memory        : 33752 MB
+# Swap memory        : 5100 MB
+# Total Virtual      : 38853 MB
+# Available Virtual  : 24835 MB
+#-----------------------------------------------------------
+Vivado% exit
+INFO: [Common 17-206] Exiting Vivado at Wed Aug 26 10:22:58 2026...

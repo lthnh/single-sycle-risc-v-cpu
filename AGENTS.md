@@ -1,7 +1,7 @@
 # Single-Cycle RISC-V CPU - AGENTS.md
 
 ## Programming Guidelines
-- This project strictly uses Verilog IEEE 1364-2005 standard.
+- This project strictly uses Verilog IEEE 1364-2005 standard. With the exception of UVM testbenches.
 - For all source files except testbenchs (files whose names end with _tb) use synthesizable code. Unsynthesizable code in those files is NOT allowed.
 - When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
 
@@ -35,3 +35,13 @@
 - `tests/tb/` - Self-contained testbenches with their own Makefiles
 - `tests/wf/` - Generated waveform directory
 - `Makefile` (root) - top-level make; delegates to `tests/tb/Makefile`
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues on this repo. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context layout (one `CONTEXT.md` + `docs/adr/` at the root). See `docs/agents/domain.md`.
