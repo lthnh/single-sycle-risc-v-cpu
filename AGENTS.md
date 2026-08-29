@@ -7,6 +7,7 @@
 
 ## Documentation Guidelines
 - If the code mentioned has a backtick \` in it, wrap that code in double backticks like this `` some code with `SOME_CONSTANT ``. Notice the space added between the code content and double backticks.
+- Export handoffs to docs/handoffs/{session name}.md.
 
 ## Build & Simulation
 - `make -C tests/tb program_counter_tb` - compile + run a testbench with iverilog + vpv
