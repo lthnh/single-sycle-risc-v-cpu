@@ -2,3 +2,4 @@ tests/bin/
 tests/wf/
 vivado*
 xvlog*
+xelab*

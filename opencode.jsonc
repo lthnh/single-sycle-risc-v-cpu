@@ -11,5 +11,6 @@
     },
     "instructions": [
         "verilog-style-guide.md"
-    ]
+    ],
+    "shell": "cmd.exe"
 }
