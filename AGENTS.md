@@ -10,10 +10,16 @@
 - Export handoffs to docs/handoffs/{session name}.md.
 
 ## Build & Simulation
-- `make -C tests/tb program_counter_tb` - compile + run a testbench with iverilog + vpv
-- `make -C tests/tb all` - run all 3 base testbenches (pc, im, dm)
-- `make -C tests/tb/alu_mods all` - run all ALU mod tests (rca, cla, sub, mul)
-- Output VCDs go to `tests/wf/`, view with `surfer <file>.vcd`
+- Vivado tools driven by version-controlled Tcl scripts are the sole compile, simulation, and
+  synthesis flow for this project.
+- Do not add or maintain an Icarus Verilog/Make build flow.
+- Tcl entry points belong under `tools/tcl/` and must resolve project paths from the script location,
+  not from the caller's working directory or `$HOME`.
+- Compile, simulation, synthesis, CI, and editor tooling must use one deterministic source manifest.
+- The roadmap will add batch commands for compiling the design, running one or all testbenches, and
+  synthesizing `single_cycle_cpu`; keep this section synchronized with those committed scripts.
+- Until those scripts are committed, the repository has no approved compile, simulation, or
+  synthesis command.
 
 ## Key Defines (inc/alu.vh)
 - `CARRY_LOOKAHEAD_ADDER_IMPL` - active by default; use `RIPPLE_CARRY_ADDER_IMPL` for ripple-carries
@@ -21,21 +27,24 @@
 
 ## Testbench Patterns
 - All testbenches `include "common.vh"` and `include "assert.vh"`
-- Assertions use `signal !== value`; `assert_eq_fmt(signal, value, format)` for formatted output
-- Tests sample ~100 random inputs then `$finish`
-- Mul test: assert after `@(posedge busy)`; testbench has clock/rstn
+- Assertions use `signal !== value`; the roadmap replaces the broken `assert_eq_fmt` macro and
+  standardizes terminal pass/fail reporting.
+- Tests may be exhaustive, directed, or deterministic-random according to the input space and must
+  terminate explicitly.
+- Multiplier tests sample the result after `busy` deasserts and must include a timeout.
 
 ## ALU Sub-modules
 - `src/alu_mods/add.v` - implements add with `RIPPLE_CARRY_ADDER_IMPL` or `CARRY_LOOKAHEAD_ADDER_IMPL`
-- `src/alu_mods/sub.v` - uses add with complemented operand + borrow_in=1'b1; borrow_out is negated carry
+- `src/alu_mods/sub.v` - uses add with complemented operand + borrow_in=1'b1; its current
+  `borrow_out` port exposes raw carry and is scheduled to be renamed
 - `src/alu_mods/mul.v` - shift-and-add multiplier with `busy` output signal and `rstn` active-low reset
 
 ## Project Structure
 - `src/` - Verilog modules (cpu, alu, control, memory, etc.)
 - `inc/` - Header defines: `common.vh` (`WIDTH 32`), `alu.vh`, `assert.vh`
-- `tests/tb/` - Self-contained testbenches with their own Makefiles
+- `tests/tb/` - Verilog testbenches; the roadmap migrates them to Vivado Tcl execution
 - `tests/wf/` - Generated waveform directory
-- `Makefile` (root) - top-level make; delegates to `tests/tb/Makefile`
+- `tools/tcl/` - required location for the planned authoritative Vivado scripts
 
 ## Agent skills
 
